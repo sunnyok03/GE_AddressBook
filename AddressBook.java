@@ -4,6 +4,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
+/*
+@desc: Address Book is used to store the details of different member
+and can be accessed and deleted by their full name
+ */
 public class AddressBook {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -16,7 +20,8 @@ public class AddressBook {
             System.out.println("Press 2 to print details by providing name.");
             System.out.println("Print 3 to print complete address book.");
             System.out.println("Press 4 to edit details by providing name.");
-            System.out.println("Press 5 to exit.");
+            System.out.println("Press 5 to delete details by providing name.");
+            System.out.println("Press 6 to exit.");
 
             System.out.print("Enter your choice: ");
             int ch = sc.nextInt();
@@ -34,7 +39,7 @@ public class AddressBook {
                     System.out.println(addressBook.get(name));
                     break;
 
-                case 3:
+                case 3: // print complete address book
                     for(Map.Entry<String,Contact> address : addressBook.entrySet()){
                         Contact contact = address.getValue();
                         System.out.println(contact);
@@ -49,6 +54,13 @@ public class AddressBook {
                     break;
 
                 case 5:
+                    sc.nextLine();
+                    System.out.print("Enter full name to delete details: ");
+                    name = sc.nextLine();
+                    deleteDetails(addressBook,name);
+                    break;
+
+                case 6:
                     System.out.println("Exiting program.");
                     return;
 
@@ -176,4 +188,20 @@ public class AddressBook {
         }
 
     }
+
+
+    /*
+    @desc:Enter details to delete a single contact by providing full name
+    @params:addressBook,fullName
+    @return:
+     */
+    public static void deleteDetails(HashMap<String,Contact>addressBook,String fullName){
+        if(!addressBook.containsKey(fullName)){
+            System.out.println("Name does not exist.");
+        }
+
+        addressBook.remove(fullName);
+        System.out.println("Details deleted.");
+    }
+
 }
