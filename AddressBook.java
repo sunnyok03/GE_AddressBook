@@ -9,11 +9,16 @@ import java.util.Scanner;
 and can be accessed and deleted by their full name
  */
 public class AddressBook {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Welcome to Address Book.");
+    HashMap<String,Contact>addressBook = new HashMap<>();
 
-        HashMap<String,Contact> addressBook = new HashMap<>();
+    /*
+    @desc: features to query on an address book
+    @params:
+    @return:
+     */
+    public void addressBookFunctionalities(String addressBookName) {
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Welcome to Address Book " + addressBookName + "...");
 
         while(true){
             System.out.println("Press 1 to add new contact.");
@@ -22,21 +27,17 @@ public class AddressBook {
             System.out.println("Press 4 to edit details by providing name.");
             System.out.println("Press 5 to delete details by providing name.");
             System.out.println("Press 6 to exit.");
+            System.out.println("----------------------------------------------");
 
             System.out.print("Enter your choice: ");
             int ch = sc.nextInt();
-            String name;
             switch (ch){
                 case 1:
                     addNewContact(addressBook);
-                    System.out.println("----Added a new Contact.----");
                     break;
 
                 case 2:
-                    sc.nextLine();
-                    System.out.print("Enter full name to display details: ");
-                    name = sc.nextLine();
-                    System.out.println(addressBook.get(name));
+                    showDetail(addressBook);
                     break;
 
                 case 3: // print complete address book
@@ -47,28 +48,21 @@ public class AddressBook {
                     break;
 
                 case 4:
-                    sc.nextLine();
-                    System.out.print("Enter full name to edit details: ");
-                    name = sc.nextLine();
-                    editDetails(addressBook,name);
+                    editDetails(addressBook);
                     break;
 
                 case 5:
-                    sc.nextLine();
-                    System.out.print("Enter full name to delete details: ");
-                    name = sc.nextLine();
-                    deleteDetails(addressBook,name);
+                   deleteDetails(addressBook);
                     break;
 
                 case 6:
-                    System.out.println("Exiting program.");
+                    System.out.println("Exiting current address book.");
                     return;
 
                 default:
                     System.out.println("Invalid input.");
                     break;
             }
-
         }
     }
 
@@ -77,7 +71,7 @@ public class AddressBook {
     @params: addressBook
     @return:
      */
-    public static void addNewContact(HashMap<String,Contact>addressBook){
+    public void addNewContact(HashMap<String,Contact>addressBook){
         Scanner sc = new Scanner(System.in);
 
         System.out.print("Enter firstName: ");
@@ -98,16 +92,20 @@ public class AddressBook {
 
         Contact contact = new Contact(firstName,lastName,address,city,state,phoneNo,emailID);
         addressBook.put(firstName+" "+lastName,contact);
+        System.out.println("----Added a new Contact.----");
     }
 
 
     /*
     @desc:Edit details of a single contact by providing full name
-    @params:addressBook, fullName
+    @params:addressBook
     @return:
      */
-    public static void editDetails(HashMap<String,Contact>addressBook,String fullName){
+    public void editDetails(HashMap<String,Contact>addressBook){
         Scanner sc = new Scanner(System.in);
+        sc.nextLine();
+        System.out.print("Enter full name to edit details: ");
+        String fullName = sc.nextLine();
         if(!addressBook.containsKey(fullName)){
             System.out.println("Contact with this name does not exist.");
             return;
@@ -195,13 +193,31 @@ public class AddressBook {
     @params:addressBook,fullName
     @return:
      */
-    public static void deleteDetails(HashMap<String,Contact>addressBook,String fullName){
+    public void deleteDetails(HashMap<String,Contact>addressBook){
+        Scanner sc = new Scanner(System.in);
+        sc.nextLine();
+        System.out.print("Enter full name to delete details: ");
+        String fullName = sc.nextLine();
         if(!addressBook.containsKey(fullName)){
             System.out.println("Name does not exist.");
+            return;
         }
 
         addressBook.remove(fullName);
         System.out.println("Details deleted.");
+    }
+
+        /*
+     @desc:Enter details to show a single contact by providing full name
+     @params:addressBook
+     @return:
+      */
+    public void showDetail(HashMap<String,Contact>addressBook){
+        Scanner sc = new Scanner(System.in);
+        sc.nextLine();
+        System.out.print("Enter full name to display details: ");
+        String name = sc.nextLine();
+        System.out.println(addressBook.get(name)); // toString will be called in Contact class
     }
 
 }

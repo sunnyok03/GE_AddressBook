@@ -2,8 +2,10 @@ package com.address_book;
 
 
 /*
-This class is to represent single
- entity contact of address book
+    @desc:This class is to represent single
+    entity contact of address book
+    @params:
+    @return:
  */
 public class Contact {
     private String firstName;
@@ -35,26 +37,6 @@ public class Contact {
         return lastName;
     }
 
-    public String getAddress() {
-        return address;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public String getPhoneNo() {
-        return phoneNo;
-    }
-
-    public String getEmailID() {
-        return emailID;
-    }
-
     public void setFirstName(String firstName) {
         this.firstName = firstName;
     }
@@ -83,6 +65,11 @@ public class Contact {
         this.emailID = emailID;
     }
 
+    /*
+    @desc: print a single contact in string format
+    @params:
+    @return: String formatted object
+     */
     @Override
     public String toString() {
         return "Contact{" +
