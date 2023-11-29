@@ -1,4 +1,4 @@
-package com.address_book;
+package com.bridgelabz;
 
 import java.util.HashMap;
 import java.util.Scanner;
