@@ -49,7 +49,9 @@ public class AddressBook {
             System.out.println("Press 5 to delete details by providing name.");
             System.out.println("Press 6 to print contacts with same city.");
             System.out.println("Press 7 to print contacts with same state.");
-            System.out.println("Press 8 to exit.");
+            System.out.println("Press 8 to get number of contacts in same city.");
+            System.out.println("Press 9 to get number of contacts in same state.");
+            System.out.println("Press 10 to exit.");
             System.out.println("----------------------------------------------");
 
             System.out.print("Enter your choice: ");
@@ -86,6 +88,14 @@ public class AddressBook {
                     break;
 
                 case 8:
+                    countAtSameCity();
+                    break;
+
+                case 9:
+                    countAtSameState();
+                    break;
+
+                case 10:
                     System.out.println("Exiting current address book.");
                     return;
 
@@ -310,4 +320,27 @@ public class AddressBook {
             sameStateContacts.forEach(System.out::println);
         }
     }
+
+    /*
+    @desc: get count of contacts in given city
+     */
+
+    public void countAtSameCity(){
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter city name: ");
+        String name = sc.next();
+        System.out.println("Count of contacts in given city: " + cityContacts.get(name).size());
+    }
+
+    /*
+    @desc: get count of contacts in given state
+     */
+
+    public void countAtSameState(){
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter state name: ");
+        String name = sc.next();
+        System.out.println("Count of contacts in given state: " + stateContacts.get(name).size());
+    }
+
 }
