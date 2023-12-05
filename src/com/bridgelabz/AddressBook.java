@@ -1,6 +1,7 @@
 package com.bridgelabz;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -11,11 +12,16 @@ and can be accessed and deleted by their full name
  */
 public class AddressBook {
     private String addressBookId;
-    ArrayList<Contact> contacts;
+    private final ArrayList<Contact> contacts;
+
+    private final HashMap<String,List<Contact>> cityContacts;
+    private final HashMap<String,List<Contact>> stateContacts;
 
     public AddressBook(String addressBookId){
         this.addressBookId = addressBookId;
         this.contacts = new ArrayList<>();
+        this.cityContacts = new HashMap<>();
+        this.stateContacts = new HashMap<>();
     }
 
     public void setAddressBookId(String addressBookId){
@@ -121,6 +127,20 @@ public class AddressBook {
         }
         
         contacts.add(newContact);
+        if(cityContacts.get(newContact.getCity()) == null){
+            List<Contact>temp = new ArrayList<>();
+            temp.add(newContact);
+            cityContacts.put(newContact.getCity(),temp);
+        }else{
+            cityContacts.get(newContact.getCity()).add(newContact); // adding new contact to cityContacts
+        }
+        if(stateContacts.get(newContact.getState()) == null){
+            List<Contact>temp = new ArrayList<>();
+            temp.add(newContact);
+            stateContacts.put(newContact.getState(),temp);
+        }else{
+            stateContacts.get(newContact.getState()).add(newContact);// adding new contact to stateContacts
+        }
         System.out.println("----Added a new Contact.----");
     }
 
@@ -264,13 +284,11 @@ public class AddressBook {
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter city name to search: ");
         String cityName = sc.next();
-        List<Contact> sameCityContacts = contacts.stream().filter(
-                contact -> contact.getCity().equals((cityName))).toList();
-        if(sameCityContacts.isEmpty()){
+        if(cityContacts.get(cityName).isEmpty()){
             System.out.println("-----No contact in given city.-----");
         }else{
             System.out.println("Contacts in given city are: ");
-            sameCityContacts.forEach(System.out::println);
+            cityContacts.get(cityName).forEach(System.out::println);
         }
     }
 
