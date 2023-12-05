@@ -144,7 +144,7 @@ public class AddressBookSystem {
         System.out.print("Enter name of address book you want to open: ");
         String name = sc.next();
         if(addressBooks.stream().noneMatch(addressBook -> addressBook.getAddressBookId().equals(name))){
-            System.out.println("Invalid address book.");
+            System.out.println("Invalid address book."); // does not match
         }else{
             addressBooks.stream().filter(addressBook -> addressBook.getAddressBookId().equals(name)).forEach(AddressBook::addressBookFunctionalities);
         }

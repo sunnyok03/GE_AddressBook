@@ -57,8 +57,16 @@ public class Contact {
         this.city = city;
     }
 
+    public String getCity(){
+        return this.city;
+    }
+
     public void setState(String state) {
         this.state = state;
+    }
+
+    public String getState(){
+        return this.state;
     }
 
     public void setPhoneNo(String phoneNo) {

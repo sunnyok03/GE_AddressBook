@@ -1,7 +1,9 @@
 package com.bridgelabz;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
 /*
 @desc: Address Book is used to store the details of different member
@@ -39,7 +41,9 @@ public class AddressBook {
             System.out.println("Print 3 to print complete address book.");
             System.out.println("Press 4 to edit details by providing name.");
             System.out.println("Press 5 to delete details by providing name.");
-            System.out.println("Press 6 to exit.");
+            System.out.println("Press 6 to print contacts with same city.");
+            System.out.println("Press 7 to print contacts with same state.");
+            System.out.println("Press 8 to exit.");
             System.out.println("----------------------------------------------");
 
             System.out.print("Enter your choice: ");
@@ -68,6 +72,14 @@ public class AddressBook {
                     break;
 
                 case 6:
+                    sameCity();
+                    break;
+
+                case 7:
+                    sameState();
+                    break;
+
+                case 8:
                     System.out.println("Exiting current address book.");
                     return;
 
@@ -120,11 +132,11 @@ public class AddressBook {
      */
     public void editDetails(){
         Scanner sc = new Scanner(System.in);
-        sc.nextLine();
         System.out.print("Enter full name to edit details: ");
         String fullName = sc.nextLine();
 
-        for (Contact contact : contacts) {
+        for (int i=0;i<contacts.size();i++) {
+            Contact contact = contacts.get(i);
             String oldFullName = contact.getFirstName() + " " + contact.getLastName();
             if (oldFullName.equals(fullName)) {
                 contacts.remove(contact); // remove the old detail
@@ -140,7 +152,7 @@ public class AddressBook {
 
                     System.out.print("Enter your choice: ");
                     int ch = sc.nextInt();
-
+                    boolean closeLoop = false;
                     switch(ch) {
                         case 1:
                             System.out.print("Enter new first name: ");
@@ -187,16 +199,20 @@ public class AddressBook {
 
                         case 8:
                             System.out.println("Completing editing.");
-                            return;
+                            closeLoop = true;
+                            break;
 
                         default:
                             System.out.println("Invalid input.");
                             break;
                     }
 
-                    // new details added
-                    contacts.add(contact);
+                    if(closeLoop){
+                        break;
+                    }
                 }
+                // new details added
+                contacts.add(contact);
             }
         }
     }
@@ -209,7 +225,6 @@ public class AddressBook {
      */
     public void deleteDetails(){
         Scanner sc = new Scanner(System.in);
-        sc.nextLine();
         System.out.print("Enter full name to delete details: ");
         String fullName = sc.nextLine();
         for(Contact contact:contacts){
@@ -229,16 +244,52 @@ public class AddressBook {
       */
     public void showDetail(){
         Scanner sc = new Scanner(System.in);
-        sc.nextLine();
         System.out.print("Enter full name to display details: ");
         String name = sc.nextLine();
         for(Contact contact:contacts){
-            String oldFullName = contact.getFirstName()+" "+contact.getLastName();
-            if(oldFullName.equals(name)){
+            if(contact.getFullName().equals(name)){
                 System.out.println(contact);
                 break;
             }
         }
     }
 
+
+    /*
+    @desc: prints all the contact in current address book with given city name
+    @params:
+    @return:
+     */
+    public void sameCity(){
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter city name to search: ");
+        String cityName = sc.next();
+        List<Contact> sameCityContacts = contacts.stream().filter(
+                contact -> contact.getCity().equals((cityName))).toList();
+        if(sameCityContacts.isEmpty()){
+            System.out.println("-----No contact in given city.-----");
+        }else{
+            System.out.println("Contacts in given city are: ");
+            sameCityContacts.forEach(System.out::println);
+        }
+    }
+
+        /*
+    @desc: prints all the contact in current address book with given state name
+    @params:
+    @return:
+     */
+    public void sameState(){
+        Scanner sc = new Scanner(System.in);
+        System.out.print("Enter state name to search: ");
+        String stateName = sc.next();
+        List<Contact> sameStateContacts = contacts.stream().filter(
+                contact -> contact.getState().equals((stateName))).toList();
+        if(sameStateContacts.isEmpty()){
+            System.out.println("-----No contact in given state.-----");
+        }else{
+            System.out.println("Contacts in given state are: ");
+            sameStateContacts.forEach(System.out::println);
+        }
+    }
 }
