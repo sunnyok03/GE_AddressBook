@@ -1,7 +1,6 @@
 package com.bridgelabz;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /*
@@ -9,16 +8,30 @@ import java.util.Scanner;
 and can be accessed and deleted by their full name
  */
 public class AddressBook {
-    HashMap<String,Contact>addressBook = new HashMap<>();
+    private String addressBookId;
+    ArrayList<Contact> contacts;
+
+    public AddressBook(String addressBookId){
+        this.addressBookId = addressBookId;
+        this.contacts = new ArrayList<>();
+    }
+
+    public void setAddressBookId(String addressBookId){
+        this.addressBookId = addressBookId;
+    }
+
+    public String getAddressBookId(){
+        return addressBookId;
+    }
 
     /*
     @desc: features to query on an address book
     @params:
     @return:
      */
-    public void addressBookFunctionalities(String addressBookName) {
+    public void addressBookFunctionalities() {
         Scanner sc = new Scanner(System.in);
-        System.out.println("Welcome to Address Book " + addressBookName + "...");
+        System.out.println("Welcome to Address Book " + this.addressBookId + "...");
 
         while(true){
             System.out.println("Press 1 to add new contact.");
@@ -33,26 +46,25 @@ public class AddressBook {
             int ch = sc.nextInt();
             switch (ch){
                 case 1:
-                    addNewContact(addressBook);
+                    addNewContact();
                     break;
 
                 case 2:
-                    showDetail(addressBook);
+                    showDetail();
                     break;
 
                 case 3: // print complete address book
-                    for(Map.Entry<String,Contact> address : addressBook.entrySet()){
-                        Contact contact = address.getValue();
+                    for(Contact contact : contacts){
                         System.out.println(contact);
                     }
                     break;
 
                 case 4:
-                    editDetails(addressBook);
+                    editDetails();
                     break;
 
                 case 5:
-                   deleteDetails(addressBook);
+                   deleteDetails();
                     break;
 
                 case 6:
@@ -71,7 +83,7 @@ public class AddressBook {
     @params: addressBook
     @return:
      */
-    public void addNewContact(HashMap<String,Contact>addressBook){
+    public void addNewContact(){
         Scanner sc = new Scanner(System.in);
 
         System.out.print("Enter firstName: ");
@@ -90,8 +102,13 @@ public class AddressBook {
         System.out.print("Enter email ID: ");
         String emailID = sc.next();
 
-        Contact contact = new Contact(firstName,lastName,address,city,state,phoneNo,emailID);
-        addressBook.put(firstName+" "+lastName,contact);
+        Contact newContact = new Contact(firstName,lastName,address,city,state,phoneNo,emailID);
+        if(contacts.stream().anyMatch(contact -> contact.getFullName().equals(newContact.getFullName()))){
+            System.out.println("-----Contact already there.-----");
+            return;
+        }
+        
+        contacts.add(newContact);
         System.out.println("----Added a new Contact.----");
     }
 
@@ -101,90 +118,87 @@ public class AddressBook {
     @params:addressBook
     @return:
      */
-    public void editDetails(HashMap<String,Contact>addressBook){
+    public void editDetails(){
         Scanner sc = new Scanner(System.in);
         sc.nextLine();
         System.out.print("Enter full name to edit details: ");
         String fullName = sc.nextLine();
-        if(!addressBook.containsKey(fullName)){
-            System.out.println("Contact with this name does not exist.");
-            return;
-        }
 
-        Contact contact = addressBook.get(fullName);
+        for (Contact contact : contacts) {
+            String oldFullName = contact.getFirstName() + " " + contact.getLastName();
+            if (oldFullName.equals(fullName)) {
+                contacts.remove(contact); // remove the old detail
+                while(true){
+                    System.out.println("Press 1 to change first name.");
+                    System.out.println("Press 2 to change last name.");
+                    System.out.println("Press 3 to change address.");
+                    System.out.println("Press 4 to change city.");
+                    System.out.println("press 5 to change state.");
+                    System.out.println("Press 6 to change phone number.");
+                    System.out.println("Press 7 to change email address.");
+                    System.out.println("Press 8 to exit.");
 
-        addressBook.remove(fullName); // remove the old detail
+                    System.out.print("Enter your choice: ");
+                    int ch = sc.nextInt();
 
-        while(true){
-            System.out.println("Press 1 to change first name.");
-            System.out.println("Press 2 to change last name.");
-            System.out.println("Press 3 to change address.");
-            System.out.println("Press 4 to change city.");
-            System.out.println("press 5 to change state.");
-            System.out.println("Press 6 to change phone number.");
-            System.out.println("Press 7 to change email address.");
-            System.out.println("Press 8 to exit.");
+                    switch(ch) {
+                        case 1:
+                            System.out.print("Enter new first name: ");
+                            String firstName = sc.next();
+                            contact.setFirstName(firstName);
+                            break;
 
-            System.out.print("Enter your choice: ");
-            int ch = sc.nextInt();
+                        case 2:
+                            System.out.print("Enter new last name: ");
+                            String lastName = sc.next();
+                            contact.setLastName(lastName);
+                            break;
 
-            switch(ch) {
-                case 1:
-                    System.out.print("Enter new first name: ");
-                    String firstName = sc.next();
-                    contact.setFirstName(firstName);
-                    break;
+                        case 3:
+                            System.out.print("Enter new address: ");
+                            sc.nextLine();
+                            String address = sc.nextLine();
+                            contact.setAddress(address);
+                            break;
 
-                case 2:
-                    System.out.print("Enter new last name: ");
-                    String lastName = sc.next();
-                    contact.setLastName(lastName);
-                    break;
+                        case 4:
+                            System.out.print("Enter new city: ");
+                            String city = sc.next();
+                            contact.setCity(city);
+                            break;
 
-                case 3:
-                    System.out.print("Enter new address: ");
-                    sc.nextLine();
-                    String address = sc.nextLine();
-                    contact.setAddress(address);
-                    break;
+                        case 5:
+                            System.out.print("Enter new state: ");
+                            String state = sc.next();
+                            contact.setState(state);
+                            break;
 
-                case 4:
-                    System.out.print("Enter new city: ");
-                    String city = sc.next();
-                    contact.setCity(city);
-                    break;
+                        case 6:
+                            System.out.print("Enter new phone number: ");
+                            String phoneNumber = sc.next();
+                            contact.setPhoneNo(phoneNumber);
+                            break;
 
-                case 5:
-                    System.out.print("Enter new state: ");
-                    String state = sc.next();
-                    contact.setState(state);
-                    break;
+                        case 7:
+                            System.out.print("Enter new emailID: ");
+                            String emailID = sc.next();
+                            contact.setEmailID(emailID);
+                            break;
 
-                case 6:
-                    System.out.print("Enter new phone number: ");
-                    String phoneNumber = sc.next();
-                    contact.setPhoneNo(phoneNumber);
-                    break;
+                        case 8:
+                            System.out.println("Completing editing.");
+                            return;
 
-                case 7:
-                    System.out.print("Enter new emailID: ");
-                    String emailID = sc.next();
-                    contact.setEmailID(emailID);
-                    break;
+                        default:
+                            System.out.println("Invalid input.");
+                            break;
+                    }
 
-                case 8:
-                    System.out.println("Completing editing.");
-                    return;
-
-                default:
-                    System.out.println("Invalid input.");
-                    break;
+                    // new details added
+                    contacts.add(contact);
+                }
             }
-
-            // new details added
-            addressBook.put(contact.getFirstName()+" "+contact.getLastName(),contact);
         }
-
     }
 
 
@@ -193,17 +207,18 @@ public class AddressBook {
     @params:addressBook,fullName
     @return:
      */
-    public void deleteDetails(HashMap<String,Contact>addressBook){
+    public void deleteDetails(){
         Scanner sc = new Scanner(System.in);
         sc.nextLine();
         System.out.print("Enter full name to delete details: ");
         String fullName = sc.nextLine();
-        if(!addressBook.containsKey(fullName)){
-            System.out.println("Name does not exist.");
-            return;
+        for(Contact contact:contacts){
+            String oldFullName = contact.getFirstName()+" "+contact.getLastName();
+            if(oldFullName.equals(fullName)){
+                contacts.remove(contact);
+                break;
+            }
         }
-
-        addressBook.remove(fullName);
         System.out.println("Details deleted.");
     }
 
@@ -212,12 +227,18 @@ public class AddressBook {
      @params:addressBook
      @return:
       */
-    public void showDetail(HashMap<String,Contact>addressBook){
+    public void showDetail(){
         Scanner sc = new Scanner(System.in);
         sc.nextLine();
         System.out.print("Enter full name to display details: ");
         String name = sc.nextLine();
-        System.out.println(addressBook.get(name)); // toString will be called in Contact class
+        for(Contact contact:contacts){
+            String oldFullName = contact.getFirstName()+" "+contact.getLastName();
+            if(oldFullName.equals(name)){
+                System.out.println(contact);
+                break;
+            }
+        }
     }
 
 }

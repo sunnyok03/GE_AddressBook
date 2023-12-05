@@ -45,6 +45,10 @@ public class Contact {
         this.lastName = lastName;
     }
 
+    public String getFullName(){
+        return this.getFirstName() + " " + this.getLastName();
+    }
+
     public void setAddress(String address) {
         this.address = address;
     }

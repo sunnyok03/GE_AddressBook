@@ -1,5 +1,6 @@
 package com.bridgelabz;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -11,8 +12,13 @@ import java.util.Scanner;
 
 public class AddressBookSystem {
 
-    public static void main(String[] args) {
-        HashMap<String,AddressBook>addressBookSystem = new HashMap<>();
+    ArrayList<AddressBook> addressBooks; // storing all address books in the system
+
+    public AddressBookSystem(){
+        addressBooks = new ArrayList<>();
+    }
+
+    public void addressBookSystemFunctionalities() {
 
         Scanner sc = new Scanner(System.in);
         System.out.println("Welcome to Address book system...");
@@ -31,23 +37,23 @@ public class AddressBookSystem {
             String name;
             switch (ch){
                 case 1:
-                    addNewAddressBook(addressBookSystem);
+                    addNewAddressBook();
                     break;
 
                 case 2:
-                    listAllAddressBook(addressBookSystem);
+                    listAllAddressBook();
                     break;
 
                 case 3:
-                    editAddressBookName(addressBookSystem);
+                    editAddressBookName();
                     break;
 
                 case 4:
-                    deleteAddressBookName(addressBookSystem);
+                    deleteAddressBookName();
                     break;
 
                 case 5:
-                    goToAddressBook(addressBookSystem);
+                    goToAddressBook();
                     break;
 
                 case 6:
@@ -68,11 +74,12 @@ public class AddressBookSystem {
     @params:
     @return:
     */
-    public static void addNewAddressBook(HashMap<String,AddressBook>addressBookSystem){
+    public void addNewAddressBook(){
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter name of the new address book: ");
         String name = sc.next();
-        addressBookSystem.put(name,new AddressBook());
+        AddressBook addressBook = new AddressBook(name);
+        addressBooks.add(addressBook);
     }
 
 
@@ -81,9 +88,9 @@ public class AddressBookSystem {
     @params: (addressBookSystem) hashmap of the address book system
     @return:
      */
-    public static void listAllAddressBook(HashMap<String,AddressBook>addressBookSystem){
-        for(String addressName : addressBookSystem.keySet()){
-            System.out.println(addressName);
+    public void listAllAddressBook(){
+        for (AddressBook addressBook : addressBooks) {
+            System.out.println(addressBook.getAddressBookId());
         }
     }
 
@@ -92,17 +99,20 @@ public class AddressBookSystem {
     @params: (addressBookSystem) hashmap of the address book system
     @return:
      */
-    public static void editAddressBookName(HashMap<String,AddressBook>addressBookSystem){
+    public void editAddressBookName(){
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter old name of address book: ");
         String oldName = sc.next();
-        if(!addressBookSystem.containsKey(oldName)){
+        if(addressBooks.stream().noneMatch(addressBook -> addressBook.getAddressBookId().equals(oldName))){
             System.out.println("Address book does not exist.");
         }else{
             System.out.print("Enter new name of address book: ");
             String newName = sc.next();
-            addressBookSystem.put(newName,addressBookSystem.get(oldName));
-            addressBookSystem.remove(oldName);
+            addressBooks.forEach(addressBook -> {
+                if(addressBook.getAddressBookId().equals(oldName)){
+                    addressBook.setAddressBookId(newName);
+                }
+            });
             System.out.println("New name updated as "+ newName + ".");
         }
     }
@@ -112,31 +122,31 @@ public class AddressBookSystem {
     @params: (addressBookSystem) hashmap of the address book system
     @return:
      */
-    public static void deleteAddressBookName(HashMap<String,AddressBook>addressBookSystem){
+    public void deleteAddressBookName(){
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter name of address book to delete: ");
         String name = sc.next();
-        if(!addressBookSystem.containsKey(name)){
+        if(addressBooks.stream().noneMatch(addressBook -> addressBook.getAddressBookId().equals(name))){
             System.out.println("Address book does not exist.");
         }else{
-            addressBookSystem.remove(name);
+            addressBooks.removeIf(addressBook -> addressBook.getAddressBookId().equals(name));
             System.out.println(name + " deleted.");
         }
     }
+
     /*
     @desc: to apply queries on one single address book
     @params: (addressBookSystem) hashmap of the address book system
     @return:
      */
-
-    public static void goToAddressBook(HashMap<String,AddressBook>addressBookSystem){
+    public void goToAddressBook(){
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter name of address book you want to open: ");
         String name = sc.next();
-        if(!addressBookSystem.containsKey(name)){
+        if(addressBooks.stream().noneMatch(addressBook -> addressBook.getAddressBookId().equals(name))){
             System.out.println("Invalid address book.");
         }else{
-            addressBookSystem.get(name).addressBookFunctionalities(name);
+            addressBooks.stream().filter(addressBook -> addressBook.getAddressBookId().equals(name)).forEach(AddressBook::addressBookFunctionalities);
         }
     }
 }
