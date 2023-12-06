@@ -1,9 +1,6 @@
 package com.bridgelabz;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /*
@@ -12,7 +9,7 @@ and can be accessed and deleted by their full name
  */
 public class AddressBook {
     private String addressBookId;
-    private final ArrayList<Contact> contacts;
+    private ArrayList<Contact> contacts;
 
     private final HashMap<String,List<Contact>> cityContacts;
     private final HashMap<String,List<Contact>> stateContacts;
@@ -51,7 +48,8 @@ public class AddressBook {
             System.out.println("Press 7 to print contacts with same state.");
             System.out.println("Press 8 to get number of contacts in same city.");
             System.out.println("Press 9 to get number of contacts in same state.");
-            System.out.println("Press 10 to exit.");
+            System.out.println("Press 10 to sort the contact in current address bool.");
+            System.out.println("Press 11 to exit.");
             System.out.println("----------------------------------------------");
 
             System.out.print("Enter your choice: ");
@@ -96,6 +94,10 @@ public class AddressBook {
                     break;
 
                 case 10:
+                    sortContactsByFullName();
+                    break;
+
+                case 11:
                     System.out.println("Exiting current address book.");
                     return;
 
@@ -342,5 +344,15 @@ public class AddressBook {
         String name = sc.next();
         System.out.println("Count of contacts in given state: " + stateContacts.get(name).size());
     }
+
+    /*
+    @desc: sort contacts by name in ascending
+     */
+    public void sortContactsByFullName(){
+        contacts = contacts.stream().sorted(Comparator.comparing(Contact::getFullName))
+                        .collect(Collectors.toCollection(ArrayList::new));
+        System.out.println("-----Contacts sorted by fullName.-----");
+    }
+
 
 }
