@@ -13,18 +13,21 @@ public class Contact {
     private String address;
     private String city;
     private String state;
+
+    private String zip;
     private String phoneNo;
     private String emailID;
 
 
     public Contact(String firstName, String lastName,
                    String address, String city,
-                   String state, String phoneNo, String emailID) {
+                   String state,String zip, String phoneNo, String emailID) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
         this.city = city;
         this.state = state;
+        this.zip = zip;
         this.phoneNo = phoneNo;
         this.emailID = emailID;
     }
@@ -67,6 +70,14 @@ public class Contact {
 
     public String getState(){
         return this.state;
+    }
+
+    public void setZip(String zip){
+        this.zip = zip;
+    }
+
+    public String getZip() {
+        return zip;
     }
 
     public void setPhoneNo(String phoneNo) {

@@ -48,8 +48,11 @@ public class AddressBook {
             System.out.println("Press 7 to print contacts with same state.");
             System.out.println("Press 8 to get number of contacts in same city.");
             System.out.println("Press 9 to get number of contacts in same state.");
-            System.out.println("Press 10 to sort the contact in current address bool.");
-            System.out.println("Press 11 to exit.");
+            System.out.println("Press 10 to sort the contacts by fullName.");
+            System.out.println("Press 11 to sort the contacts by cityName.");
+            System.out.println("Press 12 to sort the contacts by stateName.");
+            System.out.println("Press 13 to sort the contacts by zipCode.");
+            System.out.println("Press 14 to exit.");
             System.out.println("----------------------------------------------");
 
             System.out.print("Enter your choice: ");
@@ -98,6 +101,18 @@ public class AddressBook {
                     break;
 
                 case 11:
+                    sortContactsByCity();
+                    break;
+
+                case 12:
+                    sortContactsByState();
+                    break;
+
+                case 13:
+                    sortContactsByZip();
+                    break;
+
+                case 14:
                     System.out.println("Exiting current address book.");
                     return;
 
@@ -127,12 +142,14 @@ public class AddressBook {
         String city = sc.next();
         System.out.print("Enter state: ");
         String state = sc.next();
+        System.out.println("Enter zip:");
+        String zip = sc.next();
         System.out.print("Enter phone number: ");
         String phoneNo = sc.next();
         System.out.print("Enter email ID: ");
         String emailID = sc.next();
 
-        Contact newContact = new Contact(firstName,lastName,address,city,state,phoneNo,emailID);
+        Contact newContact = new Contact(firstName,lastName,address,city,state,zip,phoneNo,emailID);
         if(contacts.stream().anyMatch(contact -> contact.getFullName().equals(newContact.getFullName()))){
             System.out.println("-----Contact already there.-----");
             return;
@@ -178,9 +195,10 @@ public class AddressBook {
                     System.out.println("Press 3 to change address.");
                     System.out.println("Press 4 to change city.");
                     System.out.println("press 5 to change state.");
-                    System.out.println("Press 6 to change phone number.");
-                    System.out.println("Press 7 to change email address.");
-                    System.out.println("Press 8 to exit.");
+                    System.out.println("Press 6 to change zip.");
+                    System.out.println("Press 7 to change phone number.");
+                    System.out.println("Press 8 to change email address.");
+                    System.out.println("Press 9 to exit.");
 
                     System.out.print("Enter your choice: ");
                     int ch = sc.nextInt();
@@ -218,18 +236,24 @@ public class AddressBook {
                             break;
 
                         case 6:
+                            System.out.println("Enter new zip:");
+                            String zip = sc.next();
+                            contact.setZip(zip);
+                            break;
+
+                        case 7:
                             System.out.print("Enter new phone number: ");
                             String phoneNumber = sc.next();
                             contact.setPhoneNo(phoneNumber);
                             break;
 
-                        case 7:
+                        case 8:
                             System.out.print("Enter new emailID: ");
                             String emailID = sc.next();
                             contact.setEmailID(emailID);
                             break;
 
-                        case 8:
+                        case 9:
                             System.out.println("Completing editing.");
                             closeLoop = true;
                             break;
@@ -354,5 +378,31 @@ public class AddressBook {
         System.out.println("-----Contacts sorted by fullName.-----");
     }
 
+    /*
+    @desc: sort contacts by city in ascending
+  */
+    public void sortContactsByCity(){
+        contacts = contacts.stream().sorted(Comparator.comparing(Contact::getCity))
+                .collect(Collectors.toCollection(ArrayList::new));
+        System.out.println("-----Contacts sorted by city.-----");
+    }
+
+    /*
+    @desc: sort contacts by state in ascending
+  */
+    public void sortContactsByState(){
+        contacts = contacts.stream().sorted(Comparator.comparing(Contact::getState))
+                .collect(Collectors.toCollection(ArrayList::new));
+        System.out.println("-----Contacts sorted by state.-----");
+    }
+
+    /*
+    @desc: sort contacts by zip in ascending
+  */
+    public void sortContactsByZip(){
+        contacts = contacts.stream().sorted(Comparator.comparing(Contact::getZip))
+                .collect(Collectors.toCollection(ArrayList::new));
+        System.out.println("-----Contacts sorted by city.-----");
+    }
 
 }
