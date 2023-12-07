@@ -67,7 +67,6 @@ public class AddressBookSystem {
 
     }
 
-
     /*
     @desc: Add new addressBook in the system
     @params:
@@ -80,7 +79,6 @@ public class AddressBookSystem {
         AddressBook addressBook = new AddressBook(name);
         addressBooks.add(addressBook);
     }
-
 
     /*
     @desc: list all address books available in the system

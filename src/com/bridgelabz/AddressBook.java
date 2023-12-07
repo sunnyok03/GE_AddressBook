@@ -1,5 +1,6 @@
 package com.bridgelabz;
 
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -52,7 +53,9 @@ public class AddressBook {
             System.out.println("Press 11 to sort the contacts by cityName.");
             System.out.println("Press 12 to sort the contacts by stateName.");
             System.out.println("Press 13 to sort the contacts by zipCode.");
-            System.out.println("Press 14 to exit.");
+            System.out.println("Press 14 to add contacts to file.");
+            System.out.println("Press 15 to print contacts of current addressBook from file.");
+            System.out.println("Press 16 to exit.");
             System.out.println("----------------------------------------------");
 
             System.out.print("Enter your choice: ");
@@ -113,6 +116,14 @@ public class AddressBook {
                     break;
 
                 case 14:
+                    writeInFile();
+                    break;
+
+                case 15:
+                    readFromFile();
+                    break;
+
+                case 16:
                     System.out.println("Exiting current address book.");
                     return;
 
@@ -129,27 +140,8 @@ public class AddressBook {
     @return:
      */
     public void addNewContact(){
-        Scanner sc = new Scanner(System.in);
+        Contact newContact = getContactInput();
 
-        System.out.print("Enter firstName: ");
-        String firstName = sc.next();
-        System.out.print("Enter lastName: ");
-        String lastName = sc.next();
-        System.out.print("Enter address: ");
-        sc.nextLine(); // Consume the newline character left by previous next()
-        String address = sc.nextLine();
-        System.out.print("Enter city: ");
-        String city = sc.next();
-        System.out.print("Enter state: ");
-        String state = sc.next();
-        System.out.println("Enter zip:");
-        String zip = sc.next();
-        System.out.print("Enter phone number: ");
-        String phoneNo = sc.next();
-        System.out.print("Enter email ID: ");
-        String emailID = sc.next();
-
-        Contact newContact = new Contact(firstName,lastName,address,city,state,zip,phoneNo,emailID);
         if(contacts.stream().anyMatch(contact -> contact.getFullName().equals(newContact.getFullName()))){
             System.out.println("-----Contact already there.-----");
             return;
@@ -173,6 +165,32 @@ public class AddressBook {
         System.out.println("----Added a new Contact.----");
     }
 
+    /*
+    @desc: get input of a new contact from user
+     */
+    private Contact getContactInput(){
+        Scanner sc = new Scanner(System.in);
+
+        System.out.print("Enter firstName: ");
+        String firstName = sc.next();
+        System.out.print("Enter lastName: ");
+        String lastName = sc.next();
+        System.out.print("Enter address: ");
+        sc.nextLine(); // Consume the newline character left by previous next()
+        String address = sc.nextLine();
+        System.out.print("Enter city: ");
+        String city = sc.next();
+        System.out.print("Enter state: ");
+        String state = sc.next();
+        System.out.print("Enter zip:");
+        String zip = sc.next();
+        System.out.print("Enter phone number: ");
+        String phoneNo = sc.next();
+        System.out.print("Enter email ID: ");
+        String emailID = sc.next();
+
+        return new Contact(firstName,lastName,address,city,state,zip,phoneNo,emailID);
+    }
 
     /*
     @desc:Edit details of a single contact by providing full name
@@ -273,7 +291,6 @@ public class AddressBook {
         }
     }
 
-
     /*
     @desc:Enter details to delete a single contact by providing full name
     @params:addressBook,fullName
@@ -293,7 +310,7 @@ public class AddressBook {
         System.out.println("Details deleted.");
     }
 
-        /*
+    /*
      @desc:Enter details to show a single contact by providing full name
      @params:addressBook
      @return:
@@ -309,7 +326,6 @@ public class AddressBook {
             }
         }
     }
-
 
     /*
     @desc: prints all the contact in current address book with given city name
@@ -328,7 +344,7 @@ public class AddressBook {
         }
     }
 
-        /*
+    /*
     @desc: prints all the contact in current address book with given state name
     @params:
     @return:
@@ -350,7 +366,6 @@ public class AddressBook {
     /*
     @desc: get count of contacts in given city
      */
-
     public void countAtSameCity(){
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter city name: ");
@@ -361,7 +376,6 @@ public class AddressBook {
     /*
     @desc: get count of contacts in given state
      */
-
     public void countAtSameState(){
         Scanner sc = new Scanner(System.in);
         System.out.print("Enter state name: ");
@@ -405,4 +419,84 @@ public class AddressBook {
         System.out.println("-----Contacts sorted by city.-----");
     }
 
+    /*
+    @desc: write a new contact of each addressBook in file
+     */
+    public void writeInFile(){
+        Contact newContact = getContactInput();
+        addressBookSystemDirectory();
+        addressBookFile();
+        addContactToAddressBookFile(newContact);
+    }
+
+    /*
+    @desc: create a folder named addressBookSystemDirectory to store details
+     */
+    private void addressBookSystemDirectory(){
+        File addressBookSystemFolder;
+        try{
+            addressBookSystemFolder = new File("src/addressBookSystemDirectory");
+                boolean success = addressBookSystemFolder.mkdir();
+            if(!addressBookSystemFolder.exists()){
+                if(success){
+                    System.out.println("-----AddressBook system folder created.-----");
+                }else{
+                    System.out.println("-----AddressBook system folder not created.-----");
+                }
+            }else{
+                System.out.println("-----AddressBook system already exists.-----");
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /*
+    @desc: create a file of the current addressBook
+     */
+    private void addressBookFile(){
+        try{
+            File file = new File("src/addressBookSystemDirectory/"+addressBookId+".txt");
+            if (file.createNewFile()) {
+                System.out.println("-----File of address book " + addressBookId + " created.-----");
+            } else {
+                System.out.println("-----File already exists.-----");
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /*
+    @desc: add a new contact to current addressBook file
+     */
+    private void addContactToAddressBookFile(Contact contact){
+        try{
+            String fileName = "src/addressBookSystemDirectory/"+addressBookId+".txt";
+            FileWriter fileWriter = new FileWriter(fileName,true);
+            fileWriter.write(String.valueOf(contact));
+            fileWriter.close();
+            System.out.println("-----Added contact.-----");
+        }catch (IOException e){
+            System.out.println(e.getMessage());
+        }
+    }
+
+    /*
+    @desc: read all contacts of current addressBook
+     */
+    public void readFromFile(){
+        try {
+            String fileName = "src/addressBookSystemDirectory/"+addressBookId+".txt";
+            File file = new File(fileName);
+            Scanner reader = new Scanner(file);
+            while (reader.hasNextLine()) {
+                String data = reader.nextLine();
+                System.out.println(data);
+            }
+            reader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }
